@@ -138,7 +138,6 @@ class Parser
 
     private String num() throws  IOException, ParseError
     {
-        System.out.println("number called with lookahead " + (char)lookahead);
 
         if (isDigit(lookahead))
         {
