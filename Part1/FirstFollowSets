@@ -1,6 +1,8 @@
 FIRST sets
--> it is everything that goes right from my rule
------------------------------
+----------------------------------------------------------
+|-> it is everything that goes right from my rule        |
+----------------------------------------------------------
+
 FIRST(exp) = FIRST(op1) = FIRST(term1) = { ( U FIRST(num)} = { ( U FIRST(digit)} = { (, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } 
 
 FIRST(num) = FIRST(digit) = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
@@ -13,15 +15,16 @@ FIRST(rest) = {e U FIRST(num)} = { e, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 
 
 FOLLOW sets
--> it is whatever follows the rule from its right when it is after the arrow (the FIRST of the rule)
-   if it is has not any right thing we get the FOLLOW of the arrow one!
-   Also if the symbol is the starting symbol it has the EOF in it, represented by $ !
-   Furthermore, we do not approve e in any case:
-   1. The following terminal symbol will be selected as FOLLOW
-   2. The FIRST of the following non-terminal will be selected as FOLLOW
-   3. If it is the rightmost in right side (after the arrow), the FOLLOW in the left side
-      (the rule that produces this, before the arrow) will be selected.
------------------------------
+---------------------------------------------------------------------------------------------------------
+|-> it is whatever follows the rule from its right when it is after the arrow (the FIRST of the rule)   |
+|   if it is has not any right thing we get the FOLLOW of the arrow one!                                |
+|   Also if the symbol is the starting symbol it has the EOF in it, represented by $ !                  |
+|   Furthermore, we do not approve e in any case:                                                       |
+|   1. The following terminal symbol will be selected as FOLLOW                                         |
+|   2. The FIRST of the following non-terminal will be selected as FOLLOW                               |
+|   3. If it is the rightmost in right side (after the arrow), the FOLLOW in the left side              |
+|      (the rule that produces this, before the arrow) will be selected.                                |
+---------------------------------------------------------------------------------------------------------
 FOLLOW(exp) = { ), $ }
 
 FOLLOW(op1) = FIRST(op2) = { +, -, e } -> { + U - U FOLLOW(exp)} = { +, -, ), $ }
@@ -40,10 +43,11 @@ FOLLOW(num) = FOLLOW(term1) U FOLLOW(rest) => λόγω του απο πάνω ό
 FOLLOW(digit) = FIRST(rest) = { e, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } -> { FOLLOW(num) U 0...9 } = { **, +, -, ), $ , 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 
 FIRST+ sets
--> for the rules that have the e symbol in their FIRST set
-   FIRST+ = FIRST, unless the above situation where we put the FOLLOW of the rule
-   WITH THESE SETS WE ARE GOING TO MAKE THE LOOKAHEAD TABLE!
------------------------------
+---------------------------------------------------------------------------------------
+|-> for the rules that have the e symbol in their FIRST set                           |
+|   FIRST+ = FIRST, unless the above situation where we put the FOLLOW of the rule    |
+|   WITH THESE SETS WE ARE GOING TO MAKE THE LOOKUP TABLE!                            |
+---------------------------------------------------------------------------------------
 
 FIRST+(exp) = FIRST+(op1) = FIRST+(term1) = { (, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } 
 
