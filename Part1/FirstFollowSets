@@ -41,4 +41,16 @@ FOLLOW(digit) = FIRST(rest) = { e, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } -> { FOLLOW(nu
 
 FIRST+ sets
 -> for the rules that have the e symbol in their FIRST set
+   FIRST+ = FIRST, unless the above situation where we put the FOLLOW of the rule
+   WITH THESE SETS WE ARE GOING TO MAKE THE LOOKAHEAD TABLE!
 -----------------------------
+
+FIRST+(exp) = FIRST+(op1) = FIRST+(term1) = { (, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } 
+
+FIRST+(term2) = { ** U FOLLOW(term2) } = { **, +, -, ), $ }
+
+FIRST+(op2) = { + U - U FOLLOW(op2) } = {+, -, ), $ }
+
+FIRST+(rest) = { FOLLOW(rest) U 0...9 } = {**, +, -, ), $, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
+
+FIRST+(num) = FIRST+(digit) = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
