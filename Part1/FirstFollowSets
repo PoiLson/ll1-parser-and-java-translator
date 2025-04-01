@@ -13,11 +13,32 @@ FIRST(rest) = {e U FIRST(num)} = { e, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 
 
 FOLLOW sets
--> 
+-> it is whatever follows the rule from its right when it is after the arrow (the FIRST of the rule)
+   if it is has not any right thing we get the FOLLOW of the arrow one!
+   Also if the symbol is the starting symbol it has the EOF in it, represented by $ !
+   Furthermore, we do not approve e in any case:
+   1. The following terminal symbol will be selected as FOLLOW
+   2. The FIRST of the following non-terminal will be selected as FOLLOW
+   3. If it is the rightmost in right side (after the arrow), the FOLLOW in the left side
+      (the rule that produces this, before the arrow) will be selected.
 -----------------------------
+FOLLOW(exp) = { ), $ }
 
+FOLLOW(op1) = FIRST(op2) = { +, -, e } -> { + U - U FOLLOW(exp)} = { +, -, ), $ }
 
+FOLLOW(term1) = FIRST(term2) = { **, e } -> { ** U FOLLOW(op1) } = { **, +, -, ), $ }
 
+FOLLOW(term2) = FOLLOW(op1) = { +, -, e } -> { +, -, ), $ }
+
+FOLLOW(op2) = FOLLOW(exp) = { ), $ }
+
+FOLLOW(rest) = FOLLOW(num) = { **, e } -> { ** U FOLLOW(term1) } = { **, +, -, ), $ }
+
+FOLLOW(num) = FOLLOW(term1) U FOLLOW(rest) => λόγω του απο πάνω όρου παραμένει μόνο το FOLLOW(term)
+|-> FOLLOW(num) = FOLLOW(term1) = { **, e } -> { **, +, -, ), $ }
+
+FOLLOW(digit) = FIRST(rest) = { e, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } -> { FOLLOW(num) U 0...9 } = { **, +, -, ), $ , 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 
 FIRST+ sets
+-> for the rules that have the e symbol in their FIRST set
 -----------------------------
