@@ -68,7 +68,7 @@ StringLiteral = \"([^\"]*)\"
 /* ------------------------Lexical Rules Section---------------------- */
 
 <YYINITIAL> {
-/* operators */
+/* operators, statements, conditionals */
  "+"      { return symbol(sym.PLUS); }
  "("      { return symbol(sym.LPAREN); }
  ")"      { return symbol(sym.RPAREN); }
@@ -76,9 +76,11 @@ StringLiteral = \"([^\"]*)\"
  "}"      { return symbol(sym.RBRACE); }
  ","      { return symbol(sym.COMMA); }
  "="      { return symbol(sym.EQ); }
+
  "prefix"      { return symbol(sym.PREF); }
  "suffix"      { return symbol(sym.SUFF); }
  "reverse"      { return symbol(sym.REVERSE); }
+ 
  "if"      { return symbol(sym.IF); }
  "else"      { return symbol(sym.ELSE); }
 }
