@@ -72,8 +72,8 @@ StringLiteral = \"([^\"]*)\"
  "+"      { return symbol(sym.PLUS); }
  "("      { return symbol(sym.LPAREN); }
  ")"      { return symbol(sym.RPAREN); }
- "{"      { return symbol(sym.LBRACK); }
- "}"      { return symbol(sym.RBRACK); }
+ "{"      { return symbol(sym.LBRACE); }
+ "}"      { return symbol(sym.RBRACE); }
  ","      { return symbol(sym.COMMA); }
  "="      { return symbol(sym.EQ); }
  "prefix"      { return symbol(sym.PREF); }
@@ -83,10 +83,13 @@ StringLiteral = \"([^\"]*)\"
  "else"      { return symbol(sym.ELSE); }
 }
 
-
-{dec_int_lit} { return symbol(sym.NUMBER, new Integer(yytext())); }
-
 {WhiteSpace} { /* just skip what was found, do nothing */ }
+
+{Identifiers}  { return symbol(sym.Identifiers, yytext()); }
+
+{StringLiteral}  { return symbol(sym.StringLiteral, yytext()); }
+
+<<EOF>>    {return symbol(sym.EOF); }
 
 /* No token was found for the input so through an error.  Print out an
    Illegal character message with the illegal character that was found. */
