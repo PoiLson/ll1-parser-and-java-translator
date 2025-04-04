@@ -34,7 +34,8 @@ terminal String IDENTIFIER, STRING;
 /* All the rules of my grammar are non-terminals, I am writing them
    in the order they are being expanded in my grammar */
 
-non terminal String goal, startPoint, functionDefinition, continue;
+non terminal String goal, startPoint, functionDefinition, functionDefArgs, continue, exprList, productions;
+non terminal String functionCall, functionCallArgs, conditional, exprCon, prefix, suffix, equal, prevention, concatenation;
 
 /**
  *  Precedence Declarations,
@@ -72,7 +73,7 @@ startPoint          ::= functionDefinition:funDef startPoint:start
  * and without args can be possible
 */
 
-functionDefinition  ::= IDENTIFIER:id LPAREN:lpar functionArgs:funcArgs LBRACE:lbrac exprList:expL RBRACE:rbrac
+functionDefinition  ::= IDENTIFIER:id LPAREN:lpar functionDefArgs:funcDefArgs LBRACE:lbrac exprList:expL RBRACE:rbrac
                       | IDENTIFIER:i LPAREN:lpar RPAREN:rpar LBRACE:lbrac exprList:expL RBRACE:rbrac
                       ;
 
@@ -84,7 +85,7 @@ functionDefinition  ::= IDENTIFIER:id LPAREN:lpar functionArgs:funcArgs LBRACE:l
 * to solve some abiguity problems that I had
 */
 
-functionArgs        ::= IDENTIFIER:id COMMA:com functionArgs:funcArgs
+functionDefArgs     ::= IDENTIFIER:id COMMA:com functionDefArgs:funcDefArgs
                       | IDENTIFIER:id RPAREN:rpar
                       ;
 
@@ -103,22 +104,69 @@ continue            ::= exprList:expL continue:cn
 * in the second segment of our program
 */
 
-exprList            ::= functionCall:funcCall
-                      | conditional:cond
+exprList            ::= conditional:cond
                       | concatenation:concat
                       | reversion:rev
-                      | IDENTIFIER:id
-                      | STRING:str
+                      | productions:prod
                       ;
+
+/*
+* At last we needed to break the allowed
+* expressions because of ambiguity reasons.
+* One rule was not allowed to access some expressions
+* and when I made them two I had qbiguity problems.
+* So here is the continuation of exprList, productions.
+*/
+
+productions         ::= functionCall:funcCall
+                      | STRING: str
+                      | IDENTIFIER:id
+                      ;
+
+/*
+* The grammar rule about the calls of the functions:
+* function_name( function_calls/strings/identifiers, ... )
+*/
+
+functionCall        ::= IDENTIFIER:id LPAREN:lpar functionCallArgs:funcCallArgs
+                      | IDENTIFIER:id LPAREN:lpar RPAREN:rpar
+                      ;
+
+/*
+* The arguments that function calls are allowed to have.
+*/
+
+functionCallArgs    ::= functionCall:funcCall COMMA:com functionCallArgs:funcCallArgs
+                      | functionCall:funcCall RPAREN:rpar
+                      | IDENTIFIER:id COMMA:com functionCallArgs:funcCallArgs
+                      | IDENTIFIER:id RPAREN:rpar
+                      | STRING:str COMMA:com functionCallArgs:funcCallArgs
+                      | STRING:str RPAREN:rpar
+                      ;
+
+/*
+* The rule about the conditional statements
+* of our language, if (...) else ...
+*/
 
 conditional         ::= IF:if LPAREN:lpar exprCon:expC RPAREN:rpar exprList:expL ELSE:else exprList:expL2
                       ;
+
+/*
+* The conditionals can have inside the if parenthesis
+* other conditionals or prefix/suffix/equal statements
+*/
 
 exprCon             ::= conditional:cond
                       | prefix:pref
                       | suffix:suff
                       | equal:eq
                       ;
+
+/*
+* Here is the code for the prefix/suffix/equal operators.
+* Also, with the reverse and concatenation of our language.
+*/
 
 prefix              ::= eprList:expL PREF exprList:exrpL2
                       ;
@@ -127,4 +175,11 @@ suffix              ::= exprList:expL SUFF exprList:expL2
                       ;
 
 equal               ::= exprList:expL EQ exprList:expL2
+                      ;
+
+reversion           ::= REVERSE:rev productions:prod
+                      ;
+
+concatenation       ::= productions:prod1 concatenation:concat
+                      | productions:prod1 CONCAT:concat productions:prod2
                       ;
