@@ -1,12 +1,14 @@
 /* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
 /**
- *  Package and Import Specifications
+ *  Package and Import Specifications.
  */
+
 import java_cup.runtime.*;
 
 /**
- *  Usercode Components
+ *  Usercode Components.
  */
+
 parser code {:
     // Connect this parser to a scanner!
     Scanner s;
@@ -14,38 +16,115 @@ parser code {:
 :}
 
 /* define how to connect to the scanner! */
+
 scan with {: return s.next_token(); :};
 
 /**
- *  Symbol Lists
+ *  Symbol Lists.
  */
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, TIMES, UMINUS, LPAREN, RPAREN;
-terminal Integer    NUMBER;        // our scanner provides numbers as integers
+
+terminal String CONCAT, LPAREN, RPAREN, LBRACE, RBRACE, COMMA;
+terminal String EQ, PREF, SUFF, REVERSE;
+terminal String IF, ELSE;
+terminal String IDENTIFIER, STRING;
 
 /*  Non terminals */
-non terminal            expr_list;
-non terminal Integer    expr;      // used to store evaluated subexpressions
+/* All the rules of my grammar are non-terminals, I am writing them
+   in the order they are being expanded in my grammar */
+
+non terminal String goal, startPoint, functionDefinition, continue;
 
 /**
- *  Precedence Declarations
+ *  Precedence Declarations,
+ *  based on the project's specifications.
  */
-precedence left PLUS, MINUS;
-precedence left TIMES;
-precedence left UMINUS;
+
+precedence left IDENTIFIER;
+precedence left IF;
+precedence left CONCAT;
+precedence left REVERSE;
+
 
 /**
- *  The Grammar Rules
+ *  The Grammar Rules for our parser.
  */
-expr_list ::= expr_list expr:e SEMI         {: System.out.println(e);:}
-            | expr:e SEMI                   {: System.out.println(e);:}
-;
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;       :}
-             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;       :}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;       :}
-             | MINUS expr:e                 {: RESULT = -e;          :}
-  	         %prec UMINUS
-             | LPAREN expr:e RPAREN	        {: RESULT = e;           :}
-             | NUMBER:n	                    {: RESULT = n;           :}
-             ;
+
+/* The starting point of our grammar */
+
+goal ::= startPoint:start
+
+/* 
+ * this breaks the program into two sections,
+ * the function definitions
+ * and the function calls, or other expressions
+ * so for now, the second section is called continue
+*/ 
+
+startPoint          ::= functionDefinition:funDef startPoint:start
+                      | continue:cn
+                      ;
+
+/*
+ * Let's further analyze the fuction definitions section.
+ * It has to be like this: id ( args ) { exprList }
+ * and without args can be possible
+*/
+
+functionDefinition  ::= IDENTIFIER:id LPAREN:lpar functionArgs:funcArgs LBRACE:lbrac exprList:expL RBRACE:rbrac
+                      | IDENTIFIER:i LPAREN:lpar RPAREN:rpar LBRACE:lbrac exprList:expL RBRACE:rbrac
+                      ;
+
+/* 
+* The arguments a function can take.
+* It can be arg1, arg2, arg3
+* Or one argument only, arg1
+* I added here the right parenthesis
+* to solve some abiguity problems that I had
+*/
+
+functionArgs        ::= IDENTIFIER:id COMMA:com functionArgs:funcArgs
+                      | IDENTIFIER:id RPAREN:rpar
+                      ;
+
+/*
+* The second segment of my program.
+* It includes function calls and other expressions.
+* Let's analyze it!
+*/
+
+continue            ::= exprList:expL continue:cn
+                      | exprList:expL
+                      ;
+
+/*
+* All the expressions that are allowed
+* in the second segment of our program
+*/
+
+exprList            ::= functionCall:funcCall
+                      | conditional:cond
+                      | concatenation:concat
+                      | reversion:rev
+                      | IDENTIFIER:id
+                      | STRING:str
+                      ;
+
+conditional         ::= IF:if LPAREN:lpar exprCon:expC RPAREN:rpar exprList:expL ELSE:else exprList:expL2
+                      ;
+
+exprCon             ::= conditional:cond
+                      | prefix:pref
+                      | suffix:suff
+                      | equal:eq
+                      ;
+
+prefix              ::= eprList:expL PREF exprList:exrpL2
+                      ;
+
+suffix              ::= exprList:expL SUFF exprList:expL2
+                      ;
+
+equal               ::= exprList:expL EQ exprList:expL2
+                      ;

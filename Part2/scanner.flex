@@ -78,8 +78,8 @@ Strings = \"([^\"]*)\"
  "{"      { return symbol(sym.LBRACE, "{"); }
  "}"      { return symbol(sym.RBRACE, "}"); }
  ","      { return symbol(sym.COMMA, ","); }
- "="      { return symbol(sym.EQ, "="); }
 
+ "="      { return symbol(sym.EQ, "="); }
  "prefix"      { return symbol(sym.PREF, "prefix"); }
  "suffix"      { return symbol(sym.SUFF, "suffix"); }
  "reverse"      { return symbol(sym.REVERSE, "reverse"); }
