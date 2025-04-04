@@ -58,9 +58,12 @@ LineTerminator = \r|\n|\r\n
 /* White space is a line terminator, space, tab, or line feed. */
 WhiteSpace     = {LineTerminator} | [ \t\f]
 
-
+/* Identifiers are our function definitions and arguments */
 Identifiers = [A-Za-z$_][A-Za-z$_0-9]*
-StringLiteral = \"([^\"]*)\"
+
+/* Strings represent the strings of our language, we accept everything that
+   is in double quotes "" except from another double quote ("). */
+Strings = \"([^\"]*)\"
 
 
 
@@ -69,28 +72,32 @@ StringLiteral = \"([^\"]*)\"
 
 <YYINITIAL> {
 /* operators, statements, conditionals */
- "+"      { return symbol(sym.PLUS); }
- "("      { return symbol(sym.LPAREN); }
- ")"      { return symbol(sym.RPAREN); }
- "{"      { return symbol(sym.LBRACE); }
- "}"      { return symbol(sym.RBRACE); }
- ","      { return symbol(sym.COMMA); }
- "="      { return symbol(sym.EQ); }
+ "+"      { return symbol(sym.CONCAT, "+"); }
+ "("      { return symbol(sym.LPAREN, "(")); }
+ ")"      { return symbol(sym.RPAREN, ")"); }
+ "{"      { return symbol(sym.LBRACE, "{"); }
+ "}"      { return symbol(sym.RBRACE, "}"); }
+ ","      { return symbol(sym.COMMA, ","); }
+ "="      { return symbol(sym.EQ, "="); }
 
- "prefix"      { return symbol(sym.PREF); }
- "suffix"      { return symbol(sym.SUFF); }
- "reverse"      { return symbol(sym.REVERSE); }
+ "prefix"      { return symbol(sym.PREF, "prefix"); }
+ "suffix"      { return symbol(sym.SUFF, "suffix"); }
+ "reverse"      { return symbol(sym.REVERSE, "reverse"); }
  
- "if"      { return symbol(sym.IF); }
- "else"      { return symbol(sym.ELSE); }
+ "if"      { return symbol(sym.IF, "if"); }
+ "else"      { return symbol(sym.ELSE, "else"); }
 }
 
 {WhiteSpace} { /* just skip what was found, do nothing */ }
 
-{Identifiers}  { return symbol(sym.Identifiers, yytext()); }
 
-{StringLiteral}  { return symbol(sym.StringLiteral, yytext()); }
+/* Adding my symbols */
+{Identifiers}  { return symbol(sym.IDENTIFIER, yytext()); }
 
+{Strings}  { return symbol(sym.STRING, yytext()); }
+
+
+/* Adding the EOF symbol */
 <<EOF>>    {return symbol(sym.EOF); }
 
 /* No token was found for the input so through an error.  Print out an
