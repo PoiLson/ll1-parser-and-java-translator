@@ -73,7 +73,7 @@ Strings = \"([^\"]*)\"
 <YYINITIAL> {
 /* operators, statements, conditionals */
  "+"      { return symbol(sym.CONCAT, "+"); }
- "("      { return symbol(sym.LPAREN, "(")); }
+ "("      { return symbol(sym.LPAREN, "("); }
  ")"      { return symbol(sym.RPAREN, ")"); }
  "{"      { return symbol(sym.LBRACE, "{"); }
  "}"      { return symbol(sym.RBRACE, "}"); }

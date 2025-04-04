@@ -35,7 +35,7 @@ terminal String     IDENTIFIER, STRING;
    in the order they are being expanded in my grammar */
 
 non terminal    goal, startPoint, functionDefinition, functionDefArgs, continue, exprList, productions;
-non terminal    functionCall, functionCallArgs, conditional, exprCon, prefix, suffix, equal, prevention, concatenation;
+non terminal    functionCall, functionCallArgs, conditional, exprCon, prefix, suffix, equal, reversion, concatenation;
 
 /**
  *  Precedence Declarations,
@@ -55,6 +55,7 @@ precedence left REVERSE;
 /* The starting point of our grammar */
 
 goal ::= startPoint:start                                                                                                               {: System.out.println(start); :}
+       ;
 
 /* 
  * this breaks the program into two sections,
@@ -95,7 +96,7 @@ functionDefArgs     ::= IDENTIFIER:id COMMA:com functionDefArgs:funcDefArgs     
 * Let's analyze it!
 */
 
-continue            ::= exprList:expL continue:cn                                                                                       {: RESULT = expl + cn; :}
+continue            ::= exprList:expL continue:cn                                                                                       {: RESULT = expL + cn; :}
                       | exprList:expL                                                                                                   {: RESULT = expL; :}
                       ;
 
@@ -114,7 +115,7 @@ exprList            ::= conditional:cond                                        
 * At last we needed to break the allowed
 * expressions because of ambiguity reasons.
 * One rule was not allowed to access some expressions
-* and when I made them two I had qbiguity problems.
+* and when I made them two I had biguity problems.
 * So here is the continuation of exprList, productions.
 */
 
@@ -171,10 +172,10 @@ exprCon             ::= conditional:cond                                        
 prefix              ::= exprList:expL PREF:pref exprList:expL2                                                                          {: RESULT = expL + pref + expL2; :}
                       ;
 
-suffix              ::= exprList:expL SUFF:suff exprList:expL2                                                                          {: RESULT = explL + suff + expL2; :}
+suffix              ::= exprList:expL SUFF:suff exprList:expL2                                                                          {: RESULT = expL + suff + expL2; :}
                       ;
 
-equal               ::= exprList:expL EQ:eq exprList:expL2                                                                              {: RESULT = explL + eq + expL2; :}
+equal               ::= exprList:expL EQ:eq exprList:expL2                                                                              {: RESULT = expL + eq + expL2; :}
                       ;
 
 reversion           ::= REVERSE:rev productions:prod                                                                                    {: RESULT = rev + prod; :}
