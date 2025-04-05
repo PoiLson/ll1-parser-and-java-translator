@@ -34,8 +34,8 @@ terminal String     IDENTIFIER, STRING;
 /* All the rules of my grammar are non-terminals, I am writing them
    in the order they are being expanded in my grammar */
 
-non terminal    goal, startPoint, functionDefinition, functionDefArgs, continue, exprList, productions;
-non terminal    functionCall, functionCallArgs, conditional, exprCon, prefix, suffix, equal, reversion, concatenation;
+non terminal String   goal, startPoint, functionDefinition, functionDefArgs, continue, exprList;
+non terminal String   functionCall, functionCallArgs, conditional, exprCon, prefix, suffix, equal, reversion, concatenation;
 
 /**
  *  Precedence Declarations,
@@ -64,7 +64,7 @@ goal ::= startPoint:start                                                       
  * so for now, the second section is called continue
 */ 
 
-startPoint          ::= functionDefinition:funDef startPoint:start                                                                      {: RESULT = funDef + start; :}
+startPoint          ::= functionDefinition:funDef startPoint:start                                                                      {: RESULT = funDef + " " + start; :}
                       | continue:cn                                                                                                     {: RESULT = cn; :}
                       ;
 
@@ -74,8 +74,8 @@ startPoint          ::= functionDefinition:funDef startPoint:start              
  * and without args can be possible
 */
 
-functionDefinition  ::= IDENTIFIER:id LPAREN:lpar functionDefArgs:funcDefArgs LBRACE:lbrac exprList:expL RBRACE:rbrac                   {: RESULT = id + lpar + funcDefArgs + lbrac + expL+ rbrac; :}
-                      | IDENTIFIER:id LPAREN:lpar RPAREN:rpar LBRACE:lbrac exprList:expL RBRACE:rbrac                                   {: RESULT = id + lpar + rpar + lbrac + expL + rbrac; :}
+functionDefinition  ::= IDENTIFIER:id LPAREN:lpar functionDefArgs:funcDefArgs LBRACE:lbrac exprList:expL RBRACE:rbrac                   {: RESULT = id + " " + lpar + " "  + funcDefArgs + lbrac + "\n" + expL + "\n" + rbrac + "\n\n"; :}
+                      | IDENTIFIER:id LPAREN:lpar RPAREN:rpar LBRACE:lbrac exprList:expL RBRACE:rbrac                                   {: RESULT = id + " " + lpar + " " + rpar + "\n" + lbrac + "\n" + expL + "\n" + rbrac + "\n\n"; :}
                       ;
 
 /* 
@@ -86,8 +86,8 @@ functionDefinition  ::= IDENTIFIER:id LPAREN:lpar functionDefArgs:funcDefArgs LB
 * to solve some abiguity problems that I had
 */
 
-functionDefArgs     ::= IDENTIFIER:id COMMA:com functionDefArgs:funcDefArgs                                                             {: RESULT = id + com + funcDefArgs; :}
-                      | IDENTIFIER:id RPAREN:rpar                                                                                       {: RESULT = id + rpar; :}
+functionDefArgs     ::= IDENTIFIER:id COMMA:com functionDefArgs:funcDefArgs                                                             {: RESULT = id + " " + com + " " + funcDefArgs; :}
+                      | IDENTIFIER:id RPAREN:rpar                                                                                       {: RESULT = id + " " + rpar + "\n"; :}
                       ;
 
 /*
@@ -96,7 +96,7 @@ functionDefArgs     ::= IDENTIFIER:id COMMA:com functionDefArgs:funcDefArgs     
 * Let's analyze it!
 */
 
-continue            ::= exprList:expL continue:cn                                                                                       {: RESULT = expL + cn; :}
+continue            ::= exprList:expL continue:cn                                                                                       {: RESULT = expL + "\n" + cn; :}
                       | exprList:expL                                                                                                   {: RESULT = expL; :}
                       ;
 
@@ -108,7 +108,9 @@ continue            ::= exprList:expL continue:cn                               
 exprList            ::= conditional:cond                                                                                                {: RESULT = cond; :}
                       | concatenation:concat                                                                                            {: RESULT = concat; :}
                       | reversion:rev                                                                                                   {: RESULT = rev; :}
-                      | productions:prod                                                                                                {: RESULT = prod; :}
+                      | functionCall:funcCall                                                                                           {: RESULT = funcCall; :}
+                      | STRING: str                                                                                                     {: RESULT = str; :}
+                      | IDENTIFIER:id                                                                                                   {: RESULT = id; :}
                       ;
 
 /*
@@ -119,30 +121,31 @@ exprList            ::= conditional:cond                                        
 * So here is the continuation of exprList, productions.
 */
 
-productions         ::= functionCall:funcCall                                                                                           {: RESULT = funcCall; :}
+/* productions         ::= functionCall:funcCall                                                                                        {: RESULT = funcCall; :}
                       | STRING: str                                                                                                     {: RESULT = str; :}
                       | IDENTIFIER:id                                                                                                   {: RESULT = id; :}
                       ;
+*/
 
 /*
 * The grammar rule about the calls of the functions:
 * function_name( function_calls/strings/identifiers, ... )
 */
 
-functionCall        ::= IDENTIFIER:id LPAREN:lpar functionCallArgs:funcCallArgs                                                         {: RESULT = id + lpar + funcCallArgs; :}
-                      | IDENTIFIER:id LPAREN:lpar RPAREN:rpar                                                                           {: RESULT = id + lpar + rpar; :}
+functionCall        ::= IDENTIFIER:id LPAREN:lpar functionCallArgs:funcCallArgs                                                         {: RESULT = id + " " + lpar + " " + funcCallArgs; :}
+                      | IDENTIFIER:id LPAREN:lpar RPAREN:rpar                                                                           {: RESULT = id + " " + lpar + " " + rpar; :}
                       ;
 
 /*
 * The arguments that function calls are allowed to have.
 */
 
-functionCallArgs    ::= functionCall:funcCall COMMA:com functionCallArgs:funcCallArgs                                                   {: RESULT = funcCall + com + funcCallArgs; :}
-                      | functionCall:funcCall RPAREN:rpar                                                                               {: RESULT = funcCall + rpar; :}
-                      | IDENTIFIER:id COMMA:com functionCallArgs:funcCallArgs                                                           {: RESULT = id + com + funcCallArgs; :}
-                      | IDENTIFIER:id RPAREN:rpar                                                                                       {: RESULT = id + rpar; :}    
-                      | STRING:str COMMA:com functionCallArgs:funcCallArgs                                                              {: RESULT = str + com + funcCallArgs; :}    
-                      | STRING:str RPAREN:rpar                                                                                          {: RESULT = str + rpar; :}    
+functionCallArgs    ::= functionCall:funcCall COMMA:com functionCallArgs:funcCallArgs                                                   {: RESULT = funcCall + " " + com + " " + funcCallArgs; :}
+                      | functionCall:funcCall RPAREN:rpar                                                                               {: RESULT = funcCall + " " + rpar; :}
+                      | IDENTIFIER:id COMMA:com functionCallArgs:funcCallArgs                                                           {: RESULT = id + " " + com + " " + funcCallArgs; :}
+                      | IDENTIFIER:id RPAREN:rpar                                                                                       {: RESULT = id + " " + rpar; :}    
+                      | STRING:str COMMA:com functionCallArgs:funcCallArgs                                                              {: RESULT = str + " " + com + " " + funcCallArgs; :}    
+                      | STRING:str RPAREN:rpar                                                                                          {: RESULT = str + " " + rpar; :}    
                       ;
 
 /*
@@ -150,7 +153,7 @@ functionCallArgs    ::= functionCall:funcCall COMMA:com functionCallArgs:funcCal
 * of our language, if (...) else ...
 */
 
-conditional         ::= IF:if LPAREN:lpar exprCon:expC RPAREN:rpar exprList:expL ELSE:else exprList:expL2                               {: RESULT = if + lpar + expC + rpar + expL + else + expL2; :}
+conditional         ::= IF:if1 LPAREN:lpar exprCon:expC RPAREN:rpar exprList:expL ELSE:else1 exprList:expL2                               {: RESULT = if1 + " " + lpar + " " + expC + " " + rpar + " " + expL + " " + else1 + " " + expL2; :}
                       ;
 
 /*
@@ -158,8 +161,7 @@ conditional         ::= IF:if LPAREN:lpar exprCon:expC RPAREN:rpar exprList:expL
 * other conditionals or prefix/suffix/equal statements
 */
 
-exprCon             ::= conditional:cond                                                                                                {: RESULT = cond; :}
-                      | prefix:pref                                                                                                     {: RESULT = pref; :}
+exprCon             ::= prefix:pref                                                                                                     {: RESULT = pref; :}
                       | suffix:suff                                                                                                     {: RESULT = suff; :}
                       | equal:eq                                                                                                        {: RESULT = eq; :}
                       ;
@@ -169,18 +171,17 @@ exprCon             ::= conditional:cond                                        
 * Also, with the reverse and concatenation of our language.
 */
 
-prefix              ::= exprList:expL PREF:pref exprList:expL2                                                                          {: RESULT = expL + pref + expL2; :}
+prefix              ::= exprList:expL PREF:pref exprList:expL2                                                                          {: RESULT = expL + " " + pref + " " + expL2; :}
                       ;
 
-suffix              ::= exprList:expL SUFF:suff exprList:expL2                                                                          {: RESULT = expL + suff + expL2; :}
+suffix              ::= exprList:expL SUFF:suff exprList:expL2                                                                          {: RESULT = expL + " " + suff + " " + expL2; :}
                       ;
 
-equal               ::= exprList:expL EQ:eq exprList:expL2                                                                              {: RESULT = expL + eq + expL2; :}
+equal               ::= exprList:expL EQ:eq exprList:expL2                                                                              {: RESULT = expL + " " + eq + " " + expL2; :}
                       ;
 
-reversion           ::= REVERSE:rev productions:prod                                                                                    {: RESULT = rev + prod; :}
+reversion           ::= REVERSE:rev exprList:expL                                                                                       {: RESULT = rev + " " + expL; :}
                       ;
 
-concatenation       ::= productions:prod1 concatenation:concat                                                                          {: RESULT = prod1 + concat; :}
-                      | productions:prod1 CONCAT:concat productions:prod2                                                               {: RESULT = prod1 + concat + prod2; :}    
+concatenation       ::= exprList:expL CONCAT:concat exprList:expL2                                                                       {: RESULT = expL + " " + concat + " " + expL2; :}    
                       ;
