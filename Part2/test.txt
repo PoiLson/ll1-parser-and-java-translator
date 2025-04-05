@@ -1,0 +1,19 @@
+name()  {
+  "John"
+}
+    
+surname() {
+  "Doe"
+}
+    
+fullname(first_name, sep, last_name) {
+  if(first_name = last_name)
+    first_name
+  else
+    "bob"
+    
+}
+
+name()
+surname()
+fullname(name(), " ", surname())
