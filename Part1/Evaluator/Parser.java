@@ -80,7 +80,7 @@ class Parser
 
             return op2(result);
         }
-        else if(lookahead == '\n' || lookahead == ')' || lookahead == -1)
+        else if(lookahead == '\n' || lookahead ==  '\r' || lookahead == ')' || lookahead == -1)
             return leftOperand;
 
             
@@ -128,7 +128,7 @@ class Parser
                 return term2((int)Math.pow(leftOperand, power));
             }
         }
-        else if (lookahead == '+' || lookahead == '-' || lookahead == '\n' || lookahead == ')'  || lookahead == -1)
+        else if (lookahead == '+' || lookahead == '-' || lookahead == '\n' || lookahead == ')'  || lookahead ==  '\r' || lookahead == -1)
             return leftOperand;
 
         throw new ParseError();
@@ -176,7 +176,7 @@ class Parser
                 return (digit + nextOperand);
         }
 
-        else if (lookahead == '*' || lookahead == '+' || lookahead == '-' || lookahead == '\n' || lookahead == ')' || lookahead == -1)
+        else if (lookahead == '*' || lookahead == '+' || lookahead == '-' || lookahead == '\n' || lookahead ==  '\r' || lookahead == ')' || lookahead == -1)
             return "-1";
 
 
