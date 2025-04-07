@@ -46,7 +46,7 @@ FIRST+ sets
 ---------------------------------------------------------------------------------------
 |-> for the rules that have the e symbol in their FIRST set                           |
 |   FIRST+ = FIRST, unless the above situation where we put the FOLLOW of the rule    |
-|   WITH THESE SETS WE ARE GOING TO MAKE THE LOOKUP TABLE!                            |
+|   WITH THESE SETS WE ARE GOING TO MAKE THE LOOKAHEAD TABLE!                         |
 ---------------------------------------------------------------------------------------
 
 FIRST+(exp) = FIRST+(op1) = FIRST+(term1) = { (, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } 
