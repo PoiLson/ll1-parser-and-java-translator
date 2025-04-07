@@ -105,12 +105,12 @@ continue            ::= exprList:expL continue:cn                               
 * in the second segment of our program
 */
 
-exprList            ::= conditional:cond                                                                                                {: RESULT = cond; :}
-                      | concatenation:concat                                                                                            {: RESULT = concat; :}
-                      | reversion:rev                                                                                                   {: RESULT = rev; :}
-                      | functionCall:funcCall                                                                                           {: RESULT = funcCall; :}
-                      | STRING: str                                                                                                     {: RESULT = str; :}
-                      | IDENTIFIER:id                                                                                                   {: RESULT = id; :}
+exprList            ::= conditional:cond                                                                                                {: RESULT = "(" + cond + ")"; :}
+                      | concatenation:concat                                                                                            {: RESULT = "(" + concat + ")"; :}
+                      | reversion:rev                                                                                                   {: RESULT = "(" + rev + ")"; :}
+                      | functionCall:funcCall                                                                                           {: RESULT = "(" + funcCall + ")"; :}
+                      | STRING: str                                                                                                     {: RESULT = "(" + str + ")"; :}
+                      | IDENTIFIER:id                                                                                                   {: RESULT = "(" + id + ")"; :}
                       ;
 
 /*
@@ -132,6 +132,12 @@ functionCallArgs    ::= functionCall:funcCall COMMA:com functionCallArgs:funcCal
                       | IDENTIFIER:id RPAREN:rpar                                                                                       {: RESULT = id + " " + rpar; :}    
                       | STRING:str COMMA:com functionCallArgs:funcCallArgs                                                              {: RESULT = str + " " + com + " " + funcCallArgs; :}    
                       | STRING:str RPAREN:rpar                                                                                          {: RESULT = str + " " + rpar; :}    
+                      | conditional:cond COMMA:com functionCallArgs:funcCallArgs                                                        {: RESULT = cond + " " + com + " " + funcCallArgs; :}
+                      | conditional:cond RPAREN:rpar                                                                                    {: RESULT = cond + " " + rpar; :}
+                      | reversion:rev COMMA:com functionCallArgs:funcCallArgs                                                           {: RESULT = rev + " " + com + " " + funcCallArgs; :}
+                      | reversion:rev RPAREN:rpar                                                                                       {: RESULT = rev + " " + rpar; :}
+                      | concatenation:concat COMMA:com functionCallArgs:funcCallArgs                                                    {: RESULT = concat + " " + com + " " + funcCallArgs; :}
+                      | concatenation:concat RPAREN:rpar                                                                                {: RESULT = concat + " " + rpar; :}
                       ;
 
 /*
@@ -155,7 +161,7 @@ exprCon             ::= prefix:pref                                             
 * Also, with the reverse and concatenation of our language.
 */
 
-prefix              ::= exprList:expL PREF:pref exprList:expL2                                                                          {: RESULT = expL + " " + pref + " " + expL2; :}
+prefix              ::= exprList:expL PREF:pref exprList:expL2                                                                          {: RESULT = expL2 + ".startsWith(" + expL + ")"; :}
                       ;
 
 reversion           ::= REVERSE:rev exprList:expL                                                                                       {:RESULT ="new StringBuilder(" + expL + ").reverse().toString()"; :}  

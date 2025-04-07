@@ -146,6 +146,12 @@ functionCallArgs    ::= functionCall:funcCall COMMA:com functionCallArgs:funcCal
                       | IDENTIFIER:id RPAREN:rpar                                                                                       {: RESULT = id + " " + rpar; :}    
                       | STRING:str COMMA:com functionCallArgs:funcCallArgs                                                              {: RESULT = str + " " + com + " " + funcCallArgs; :}    
                       | STRING:str RPAREN:rpar                                                                                          {: RESULT = str + " " + rpar; :}    
+                      | conditional:cond COMMA:com functionCallArgs:funcCallArgs                                                        {: RESULT = cond + " " + com + " " + funcCallArgs; :}
+                      | conditional:cond RPAREN:rpar                                                                                    {: RESULT = cond + " " + rpar; :}
+                      | reversion:rev COMMA:com functionCallArgs:funcCallArgs                                                           {: RESULT = rev + " " + com + " " + funcCallArgs; :}
+                      | reversion:rev RPAREN:rpar                                                                                       {: RESULT = rev + " " + rpar; :}
+                      | concatenation:concat COMMA:com functionCallArgs:funcCallArgs                                                    {: RESULT = concat + " " + com + " " + funcCallArgs; :}
+                      | concatenation:concat RPAREN:rpar                                                                                {: RESULT = concat + " " + rpar; :}
                       ;
 
 /*

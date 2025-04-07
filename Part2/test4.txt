@@ -1,0 +1,40 @@
+name()  {
+   "John"
+}
+
+surname() {
+   "Doe"
+}
+
+fullname(first_name, sep, last_name) {
+   "Tralalero Tralala Bombardino Crocodilo"
+}
+
+correct() {
+   "Correct"
+}
+
+incorrect() {
+   "Incorrect"
+}
+
+how() {
+   "how did you get here?"
+}
+
+eval(x) {
+   x
+}
+
+
+if (
+   eval(
+      if ("J" + "o" + "h" + "n" = name())  
+         "Danai2"
+      else
+         incorrect()
+   ) prefix "Danai2"
+)
+   "Manolis"
+else
+   incorrect()
