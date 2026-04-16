@@ -23,7 +23,7 @@ In the second part, a small language with string operations, conditionals, and f
 
 ### Structure
 
-For Part1 I did the first part about transforming our grammar into LL1 and put my notes on the folder [`/Part1/LL1 grammar`](/Part1/LL1 grammar) grammar. And for the Calculator parser, I added my code into the folder [`/Part1/Evaluator`](/Part1/Evaluator).
+For Part1 I did the first part about transforming our grammar into LL1 and put my notes on the folder [`/Part1/LL1 grammar`](/Part1/LL1%20grammar) grammar. And for the Calculator parser, I added my code into the folder [`/Part1/Evaluator`](/Part1/Evaluator).
 
 ### Usage
 
