@@ -59,4 +59,10 @@ To verify that the generated Translated.java compiles correctly:
 
 The ```make all``` command generates the IR and ```Translated.java```, while ```make check``` verifies that the produced Java code compiles correctly.
 
-If you want to use a different input file, you can modify the corresponding line in the ```[`/Part2/Makefile`](/Part2/Makefile)``` or run the compiler manually:
+If you want to use a different input file, you can modify the corresponding line in the [`/Part2/Makefile`](/Part2/Makefile) or run the compiler manually:
+
+```
+make compile
+java -cp ./java-cup-11b-runtime.jar:. Main < input.txt
+make check
+```
