@@ -23,17 +23,17 @@ In the second part, a small language with string operations, conditionals, and f
 
 ### Structure
 
-For Part 1, I transformed the grammar into LL(1) form and added my notes in the [`Part1/LL1 grammar`](/Part1/LL1%20grammar) folder. The calculator parser implementation is located in [`Part1/Evaluator`](/Part1/Evaluator).
+For Part 1, I transformed the grammar into LL(1) form and added my notes in the [`Part1/LL1 grammar`](Part1/LL1%20grammar) folder. The calculator parser implementation is located in [`Part1/Evaluator`](Part1/Evaluator).
 
 ### Usage
 
-To compile and run the calculator parser with the default input provided in the [`/Part1/Evaluator/Makefile`](/Part1/Evaluator/Makefile), use:
+To compile and run the calculator parser with the default input provided in the [`Part1/Evaluator/Makefile`](Part1/Evaluator/Makefile), use:
 
 ```make run```
 
 This command compiles and executes the parser using a sample arithmetic expression.
 
-If you want to use a different input, you can either modify the corresponding input string in the [`/Part1/Evaluator/Makefile`](/Part1/Evaluator/Makefile) (line 12) or run the program manually:
+If you want to use a different input, you can either modify the corresponding input string in the [`Part1/Evaluator/Makefile`](Part1/Evaluator/Makefile) (line 12) or run the program manually:
 
 ```
 make compile
@@ -59,7 +59,7 @@ To verify that the generated Translated.java compiles correctly:
 
 The ```make all``` command generates the IR and ```Translated.java```, while ```make check``` verifies that the produced Java code compiles correctly.
 
-If you want to use a different input file, you can modify the corresponding line in the [`/Part2/Makefile`](/Part2/Makefile) or run the compiler manually:
+If you want to use a different input file, you can modify the corresponding line in the [`Part2/Makefile`](Part2/Makefile) or run the compiler manually:
 
 ```
 make compile
